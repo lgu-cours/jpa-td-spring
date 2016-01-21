@@ -1,33 +1,25 @@
 package td.services.impl;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
+import javax.inject.Inject;
+import javax.inject.Named;
 
-import td.dao.AuthorDAO;
-import td.dao.impl.AuthorDAOImpl;
 import td.entities.Author;
+import td.persistence.dao.AuthorDAO;
 import td.services.AuthorService;
-import td.util.EntityManagerFactoryHelper;
 
+//@Component
+@Named
+//@Scope("prototype")
 public class AuthorServiceImpl implements AuthorService {
 
-	private EntityManager entityManager ;
+	//@Autowired
+	@Inject
 	private AuthorDAO dao ;
 	
 	public AuthorServiceImpl() {
-		super();
-		entityManager = getEntityManager() ;
-		this.dao = new AuthorDAOImpl(entityManager) ;
+		System.out.println("CONSTRUCTOR " + this.getClass().getSimpleName() );
 	}
 	
-    private EntityManager getEntityManager() {
-        if ( entityManager == null ) {
-            EntityManagerFactory emf = EntityManagerFactoryHelper.getFactory();
-            entityManager = emf.createEntityManager();
-        }
-        return entityManager;
-    }
-    
 	@Override
 	public String getAuthorFirstName(int id) {
 		Author author = dao.findById(id);
@@ -39,23 +31,21 @@ public class AuthorServiceImpl implements AuthorService {
 
 	@Override
 	public void createAuthor(int id, String firstName, String lastName) {
-		entityManager.getTransaction().begin();
-
+		//entityManager.getTransaction().begin();
 		Author author = new Author() ;
 		author.setId(id);
 		author.setFirstName(firstName);
 		author.setLastName(lastName);
 		dao.persist(author);
-		
-		entityManager.getTransaction().commit();
+		//entityManager.getTransaction().commit();
 	}
 
 	@Override
 	public void deleteAuthor(int id) {
-		entityManager.getTransaction().begin();
+		//entityManager.getTransaction().begin();
 		Author author = new Author() ;
 		author.setId(id);
 		dao.delete(author);
-		entityManager.getTransaction().commit();
+		//entityManager.getTransaction().commit();
 	}
 }

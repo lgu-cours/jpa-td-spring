@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/aop 
+	http://www.springframework.org/schema/aop/spring-aop-3.0.xsd 
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context-3.0.xsd
+	http://www.springframework.org/schema/tx
+	http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<!-- ANNOTATIONS POUR LA CREATION DE BEANS -->
+	<context:component-scan base-package="td" />
+	
+	<!-- LocalEntityManagerFactoryBean 
+	This is a spring FactoryBean that creates an EntityManagerFactory. 
+	This is configured as spring bean and then injected into the DAO as a property. 
+	The configuration settings are passed through META-INF/persistence.xml. 
+	persistence.xml contains one or more persistence units. 
+	The persistence units contains one or more persistence classes along with the data source and mapping files. 
+	The persistence Unit is then injected into the LocalEntityManagedFactoryBean configuration in spring xml. 
+	Note that for spring, there is not much advantage in using a LocalEntityManagedFactoryBean.
+	 -->	
+	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
+    	<property name="persistenceUnitName" value="td" />
+	</bean>
+
+	<!-- LocalContainerEntityManagerFactoryBean
+	This is a spring FactoryBean that creates an EntityManagerFactory. However, this factory is managed by spring. 
+	Instead of persistence.xml the configuration settings can be set in the spring application context. 
+	For example, create a datasource and pass the datasource in the LocalContainerManagedFactoryBean bean. 
+	If a data source is specified in both persistence.xml and in the spring configuration then the later takes precedence. 
+	Along with DataSource a property called jpaVendorAdapter is passed to the LocalContainerManagedFactoryBean. 
+	Different adapters such as HibernateJpaVendorAdapter, OpenJpaVendorAdapter etc are provided by spring. 
+	Various properties can be set in the Vendor Adapter. 
+	LocalContainerManagedFactoryBean is the mostly likely choice for use in spring. 
+	 -->
+	 <!-- 
+	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="persistenceXmlLocation" value="classpath:META-INF/persistence.xml" />
+		<property name="persistenceUnitName"    value="td" />
+		<property name="dataSource"             ref="dataSource" />
+		<property name="jpaVendorAdapter"       ref="jpaVendorAdapter" />
+		<property name="jpaDialect"             ref="jpaDialect" />
+	</bean>
+	  -->
+ 
+<!-- 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="org.apache.derby.jdbc.ClientDriver" />
+		<property name="url"             value="jdbc:derby://localhost:1527/bookstore" />
+		<property name="username"        value="root" />
+		<property name="password"        value="admin" />
+	</bean>
+ -->
+<!-- 	<bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+		<property name="database"         value="HSQL" />
+		<property name="databasePlatform" value="org.hibernate.dialect.HSQLDialect" />
+	</bean>
+ --> 
+	<bean id="jpaDialect" class="org.springframework.orm.jpa.vendor.HibernateJpaDialect" />
+ 
+	<tx:annotation-driven transaction-manager="transactionManager" />
+
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	<!-- 	<property name="dataSource"           ref="dataSource" /> -->
+		<property name="jpaDialect"           ref="jpaDialect" />
+	</bean>
+ 
+</beans>

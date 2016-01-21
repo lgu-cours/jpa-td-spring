@@ -1,7 +1,13 @@
 package td.entities;
 
 import java.io.Serializable;
-import javax.persistence.*;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 
 /**
@@ -20,6 +26,14 @@ public class Author implements Serializable {
 
 	@Column(name="LAST_NAME")
 	private String lastName;
+	
+    //----------------------------------------------------------------------
+    // ENTITY LINKS ( RELATIONSHIP )
+    //----------------------------------------------------------------------
+    //@OneToMany(mappedBy="author", targetEntity=Book.class ) // Fecth Type is LAZY by default
+    @OneToMany(mappedBy="author", targetEntity=Book.class, fetch=FetchType.EAGER)
+    private List<Book> listOfBook  ;
+
 
     public Author() {
     }
@@ -47,6 +61,17 @@ public class Author implements Serializable {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
+	
+    //----------------------------------------------------------------------
+    // GETTERS & SETTERS FOR LINKS
+    //----------------------------------------------------------------------
+    public void setListOfBook( List<Book> listOfBook ) {
+        this.listOfBook = listOfBook;
+    }
+    public List<Book> getListOfBook() {
+        return this.listOfBook;
+    }
+
 
 	@Override
 	public String toString() {

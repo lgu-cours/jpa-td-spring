@@ -3,8 +3,8 @@ package td.tests;
 import java.util.List;
 
 import td.entities.Author;
+import td.provider.BeanProvider;
 import td.services.AuthorService;
-import td.services.impl.AuthorServiceImpl;
 
 public class TestAuthorService {
 
@@ -12,7 +12,15 @@ public class TestAuthorService {
 	{
 		System.out.println("----------");
 
-		AuthorService service = new AuthorServiceImpl();
+		//AuthorService service = new AuthorServiceImpl();
+		AuthorService service = BeanProvider.getBean(AuthorService.class);
+		AuthorService service2 = BeanProvider.getBean(AuthorService.class);
+		if ( service == service2 ) {
+			System.out.println("Same instance => SINGLETON");
+		}
+		else {
+			System.out.println("2 instances => PROTOTYPE");
+		}
 		
 		String firstName = service.getAuthorFirstName(100);
 		System.out.println("firstName = " + firstName );
@@ -21,21 +29,6 @@ public class TestAuthorService {
 		
 		service.createAuthor(555, "Tryphon", "Tournesol");  // Transaction 2
 		
-//		Author author = dao.findById(100);
-//		print(author);
-//		
-//		Author a1 = new Author();
-//		a1.setId(333);
-//		a1.setFirstName("Jules");
-//		a1.setLastName("Verne");
-//		em.getTransaction().begin();
-//		dao.delete(a1);
-//		dao.persist(a1);
-//		em.getTransaction().commit();
-//		
-//		Author a2 = dao.findById(333);
-//		print(a2);
-//		
 		
 		/***
 		List<Author> authors = service.listAll();
